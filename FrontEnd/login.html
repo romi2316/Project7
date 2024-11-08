@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+  <header>
+    <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+    <nav>
+      <ul>
+        <li><a href="projets.html">projets</a></li>
+        <li><a href="contact.html">contact</a></li>
+        <li id="navLogin"><a href="login.html">login</a></li>
+        <li id="navLogout" style="display: none;"><a href="#" id="logout">logout</a></li>
+        <li><img src="./assets/icons/instagram.png" alt="Instagram" id="instagram-img"></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="login-section">
+      <h2>Log In</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" class="input-field" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" class="input-field" required>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" id="login-btn">Se connecter</button>
+        </div>
+
+        <div class="form-group">
+          <a href="#" class="forgot-password">Mot de passe oublié</a>
+          <p id="errorMessage" class="error-message"></p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
