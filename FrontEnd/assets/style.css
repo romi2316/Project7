@@ -269,3 +269,153 @@ footer nav ul {
 #instagram-img {
 	height: 19.5px;
 }
+
+.categories {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+
+.categories button {
+    border: 2px solid #1D705D; /* Couleur de la bordure */
+    background-color: transparent; /* Fond transparent */
+    color: #1D705D; /* Couleur du texte */
+    border-radius: 30px; /* Coins arrondis */
+    padding: 8px 20px; /* Espacement interne */
+    font-size: 16px; /* Taille de la police */
+    font-family: 'Syne', sans-serif; /* Police personnalisée */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.categories button:hover {
+    background-color: #1D705D; /* Fond vert foncé au survol */
+    color: #ffffff; /* Couleur du texte blanche au survol */
+}
+
+.categories button.active {
+    background-color: #1D705D; /* Fond vert foncé pour le bouton actif */
+    color: #ffffff; /* Couleur du texte blanche pour le bouton actif */
+}
+
+/* Pour masquer la section des catégories si l'utilisateur est connecté */
+.categories.hidden {
+    display: none;
+}
+
+.portfolio-header {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Ajuste l'espacement entre le titre et le bouton */
+	justify-content: center; /* Centrer horizontalement le titre et le bouton */
+
+}
+
+.portfolio-header h2 {
+    margin: 0; /* Supprime les marges par défaut */
+    font-size: 24px; /* Ajuste la taille selon la maquette */
+    font-weight: 700; /* S'assure que la police est épaisse */
+}
+
+.edit-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px; /* Ajuste la taille de la police */
+    color: #333; /* Assurez-vous que la couleur correspond à la maquette */
+}
+
+.edit-button i {
+    margin-right: 5px; /* Ajoute de l'espace entre l'icône et le texte */
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+    text-align: center;
+}
+
+.modal-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    overflow-y: auto;
+}
+
+.modal-gallery figure {
+    position: relative;
+    margin: 0;
+}
+
+.modal-gallery img {
+    width: 100%;
+    height: auto;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.add-photo-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+	width: 237px;
+    background-color: #007b5e;
+    color: white;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+	font-family: syne;
+}
+
+.add-photo-button:hover {
+    background-color: #00573a;
+}
+
+/* Icône de suppression */
+.modal-gallery i.fa-trash-alt {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+	background-color: black;
+    color: #f1ecec;
+	font-size: 0.8em; /* Réduit la taille de l'icône de la corbeille */
+    padding: 3px;
+    cursor: pointer;
+	display: inline-flex; /* Aligne l'icône au centre du fond noir */
+    align-items: center;
+    justify-content: center;
+}
+#editModal .modal-content h2 {
+    font-size: 26px; 
+    color: #333;
+    font-family: 'Work Sans', sans-serif;
+	font-weight: 400;
+}
+

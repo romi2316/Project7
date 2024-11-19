@@ -1,6 +1,7 @@
 // URL de l'API pour récupérer les projets et les catégories
 const apiURLWorks = 'http://localhost:5678/api/works';
 const apiURLCategories = 'http://localhost:5678/api/categories';
+let editButton = document.getElementById('editProjectsBtn');
 
 // Fonction pour récupérer et afficher les projets
 async function displayWorks() {
@@ -118,58 +119,6 @@ function filterWorks(categoryId = null) {
     });
 }
 
-document.getElementById("loginForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêche le rechargement de la page
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const errorMessage = document.getElementById("errorMessage");
-
-    // Nettoie les messages d'erreur précédents
-    errorMessage.textContent = "";
-
-    // Envoi des informations de connexion
-    fetch("http://localhost:5678/api/users/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ email, password })
-    })
-        .then(response => {
-            // Vérifiez le statut de la réponse
-            if (response.ok) {
-                // La requête est réussie, donc on retourne la réponse JSON
-                return response.json();
-            } else {
-                // Si le statut n'est pas `200 OK`, on déclenche une erreur
-                throw new Error("E-mail ou mot de passe incorrect.");
-            }
-        })
-        .then(data => {
-            // Vérifiez que le token et l'userId existent dans la réponse
-            if (data.token && data.userId) {
-                // Stocke le token pour les actions futures
-                localStorage.setItem("authToken", data.token);
-
-                // Mettez à jour les boutons avant de rediriger
-                updateLoginLogout(true);
-
-                // Redirige vers la page d'accueil après une courte pause (pour que l'utilisateur voit le changement)
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 1000);
-            } else {
-                // Si le token ou userId n'est pas présent, affiche un message d'erreur
-                errorMessage.textContent = "Erreur dans l’identifiant ou le mot de passe.";
-            }
-        })
-        .catch(error => {
-            // Gestion des erreurs
-            console.error("Erreur :", error);
-            errorMessage.textContent = error.message || "Une erreur est survenue. Veuillez réessayer plus tard.";
-        });
-});
 
 // Fonction pour gérer l'affichage des boutons login/logout
 function updateLoginLogout(isLoggedIn) {
@@ -186,7 +135,7 @@ function updateLoginLogout(isLoggedIn) {
 }
 
 // Gestion de la déconnexion
-document.getElementById("logout").addEventListener("click", function (event) {
+navLogout.addEventListener("click", function (event) {
     event.preventDefault(); // Empêche le rechargement de la page
 
     // Supprimez le token de l'utilisateur du stockage local
@@ -196,33 +145,136 @@ document.getElementById("logout").addEventListener("click", function (event) {
     updateLoginLogout(false);
 
     // Optionnel: Redirigez vers la page d'accueil ou une autre page
-    window.location.href = "index.html";
+    window.location.href = "login.html";
 });
 
-// Appelle les fonctions quand la page est chargée
-document.addEventListener('DOMContentLoaded', async () => {
-    if (window.location.pathname.endsWith("index.html")) {
-        await displayWorks(); // Affiche les projets
-        await displayFilters(); // Affiche les filtres
-    }
-    // Vérifiez si l'utilisateur est déjà connecté
-    const token = localStorage.getItem('authToken');
-    updateLoginLogout(!!token); // Met à jour les boutons selon l'état de connexion
+// Fonction pour cacher les filtres si l'utilisateur est connecté
+function hideFiltersIfLoggedIn() {
+    const categoriesContainer = document.querySelector('.categories');
+    const token = localStorage.getItem('authToken'); // Vérifie la présence du token
 
-    // Sélectionner le bouton "Modifier"
-    const editButton = document.getElementById('editProjectsBtn');
-
-    // Si un token est présent, l'utilisateur est connecté
     if (token) {
-        // Afficher le bouton "Modifier"
-        if (editButton) {
-            editButton.style.display = 'block';
-        }
-    } else {
-        // Si aucun token n'est présent, cacher le bouton "Modifier"
-        if (editButton) {
-            editButton.style.display = 'none';
-        }
+        categoriesContainer.classList.add('hidden'); // Masque la section des catégories
     }
+}
 
+// Sélection des éléments du DOM pour la modale
+const editModal = document.getElementById('editModal');
+const modalGallery = document.getElementById('modalGallery');
+
+const closeModalButton = document.querySelector('.close-modal');
+const addPhotoButton = document.getElementById('addPhotoBtn');
+
+// Fonction pour ouvrir la modale
+function openEditModal() {
+    editModal.classList.remove('hidden');
+    editModal.style.display = 'block';
+    loadProjectsInModal();
+}
+
+// Fonction pour fermer la modale
+function closeEditModal() {
+    editModal.style.display = 'none';
+    editModal.classList.add('hidden');
+}
+
+// Ajouter les événements pour ouvrir et fermer la modal
+editButton.addEventListener('click', openEditModal);
+closeModalButton.addEventListener('click', closeEditModal);
+
+// Empêche la fermeture de la modal en cliquant à l'extérieur
+editModal.addEventListener('click', (event) => {
+    if (event.target === editModal) {
+        closeEditModal();
+    }
+});
+
+// Charger les projets dans la modal
+async function loadProjectsInModal() {
+    try {
+        const response = await fetch(apiURLWorks);
+        if (!response.ok) {
+            throw new Error('Erreur lors du chargement des projets');
+        }
+        const projects = await response.json();
+
+        modalGallery.innerHTML = '';
+
+        projects.forEach(project => {
+            const figure = document.createElement('figure');
+            const img = document.createElement('img');
+            img.src = project.imageUrl;
+            img.alt = project.title;
+
+            const figcaption = document.createElement('figcaption');
+            figcaption.textContent = project.title;
+
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fas fa-trash-alt';
+            deleteIcon.addEventListener('click', () => deleteProject(project.id));
+
+            figure.appendChild(img);
+            figure.appendChild(figcaption);
+            figure.appendChild(deleteIcon);
+
+            modalGallery.appendChild(figure);
+        });
+    } catch (error) {
+        console.error('Erreur:', error);
+        modalGallery.innerHTML = '<p>Impossible de charger les projets.</p>';
+    }
+}
+
+// Fonction pour supprimer un projet
+async function deleteProject(projectId) {
+    try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch(`${apiURLWorks}/${projectId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de la suppression du projet');
+        }
+
+        alert('Projet supprimé avec succès');
+        loadProjectsInModal();
+        displayWorks();
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Impossible de supprimer le projet.');
+    }
+}
+
+// Event pour "Ajouter une photo"
+addPhotoButton.addEventListener('click', () => {
+    // Logique pour ajouter une photo ou ouvrir un autre modal de téléchargement de photo
+    alert("Fonction d'ajout de photo en cours de développement");
+});
+
+// Appelle les fonctions quandFQ    azerè_çà QST la page est chargée
+document.addEventListener('DOMContentLoaded', async () => {
+    await displayWorks(); // Affiche les projets
+    await displayFilters(); // Affiche les filtres
+    hideFiltersIfLoggedIn(); // Vérifie l'état de connexion et masque les filtres si nécessaire
+// Vérifiez si l'utilisateur est déjà connecté
+const token = localStorage.getItem('authToken');
+console.log(token)
+updateLoginLogout(!!token); // Met à jour les boutons selon l'état de connexion
+
+// Si un token est présent, l'utilisateur est connecté
+if (token) {
+    // Afficher le bouton "Modifier"
+    if (editButton) {
+        editButton.style.display = 'block';
+    }
+} else {
+    // Si aucun token n'est présent, cacher le bouton "Modifier"
+    if (editButton) {
+        editButton.style.display = 'none';
+    }
+}
 });
