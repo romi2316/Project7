@@ -203,9 +203,6 @@ footer nav ul {
     color: #003F2E;
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
 
 .input-field {
     width: 100%;
@@ -419,3 +416,190 @@ footer nav ul {
 	font-weight: 400;
 }
 
+/* Empêche de défiler lorsque la modale est ouverte */
+body.modal-open {
+    overflow: hidden; /* Désactive le scroll de la page */
+}
+
+/* Styles pour la modale */
+.modal {
+    display: none; /* Masquée par défaut */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Couche de fond sombre */
+    z-index: 1000; /* Assure que la modale est au-dessus de tout */
+    display: flex; /* Active le centrage */
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* Ajoute un défilement si le contenu dépasse */
+}
+
+/* Contenu de la modale */
+.modal-content {
+    background-color: #fff; /* Fond blanc pour le contenu */
+    border-radius: 10px; /* Coins arrondis */
+    padding: 20px; /* Espacement interne */
+    width: 90%; /* Largeur relative pour s'adapter aux petits écrans */
+    max-width: 600px; /* Largeur maximale */
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3); /* Ombre portée */
+    position: relative; /* Nécessaire pour le bouton de fermeture */
+    animation: fadeIn 0.3s ease-in-out; /* Animation d'apparition */
+    text-align: center;
+}
+
+/* Animation pour l'apparition de la modale */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Bouton pour fermer la modale */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333; /* Couleur de l'icône de fermeture */
+}
+
+/* Bouton d'ajout ou d'action */
+.add-photo-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    width: 237px;
+    background-color: #007b5e; /* Couleur verte */
+    color: white; /* Texte en blanc */
+    border: none;
+    border-radius: 60px; /* Boutons arrondis */
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+}
+
+.add-photo-button:hover {
+    background-color: #00573a; /* Couleur légèrement plus foncée au survol */
+}
+
+.modal-hidden{
+    display: none;
+}
+#navLogout{
+    display: none;
+}
+
+
+/* Conteneur de prévisualisation */
+.photo-preview {
+    width: 420px;
+    height: 170px;
+    background-color: #E8F1F6;
+    gap: 10px;
+    border: 2px #2e7d67;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  #upload-icon {
+    width: 20%;
+    max-height: 100%;
+  }
+
+  .uploaded {
+    max-width: 30%;
+    height: 193px;
+}
+
+.photo-hint.hidden,
+.add-photo-btn.hidden {
+    display: none;
+}
+  
+  /* Bouton "Ajouter photo" */
+  .add-photo-btn {
+    background-color: #CBD6DC;
+    ;
+    color: #306685;    ;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 40%;
+  }
+  
+  .add-photo-btn:hover {
+    background-color: #246153;
+  }
+  
+  /* Texte d'indication */
+  .photo-hint {
+    color: #7a7a7a;
+    font-size: 10px;
+    margin-top: 5px;
+    text-align: center;
+  }
+  
+  /* Champ texte et sélection */
+  input[type="text"], select {
+    width: 60%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Bouton de validation */
+  .submit-button {
+    background-color: #2e7d67;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    height: 34px;
+    width: 40%;
+  }
+  
+  .submit-button:hover {
+    background-color: #246153;
+  }
+  
+  button:disabled {
+    background-color: #ccc; /* Gris clair */
+    color: #666;           /* Texte grisé */
+    border: 1px solid #999; /* Bordure grisée */
+    cursor: not-allowed;   /* Curseur interdit */
+    opacity: 0.6;          /* Optionnel : rendre le bouton plus transparent */
+}
+.form-group{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label[for="title"],
+label[for="category"] {
+    align-self: flex-start;
+    margin-bottom: 5px; 
+    text-align: left; 
+    padding-left: 120px; 
+}

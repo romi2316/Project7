@@ -1,222 +1,131 @@
-// URL de l'API pour récupérer les projets et les catégories
 const apiURLWorks = 'http://localhost:5678/api/works';
 const apiURLCategories = 'http://localhost:5678/api/categories';
 let editButton = document.getElementById('editProjectsBtn');
 
-// Fonction pour récupérer et afficher les projets
-async function displayWorks() {
-    try {
-        // Appel à l'API pour récupérer les projets
-        const workResponse = await fetch(apiURLWorks);
-
-        // Vérifie si la requête a réussi
-        if (!workResponse.ok) {
-            throw new Error('Erreur lors de la récupération des projets');
-        }
-
-        // Convertit la réponse en format JSON
-        const projets = await workResponse.json();
-        console.log(projets)
-
-        // Sélectionne l'élément de la galerie dans le DOM
-        const galerie = document.querySelector('.gallery');
-
-        // Vide le contenu statique de la galerie
-        galerie.innerHTML = '';
-
-        // Parcourt les projets récupérés et les ajoute à la galerie
-        projets.forEach(project => {
-            // Crée un élément figure pour chaque projet
-            const figure = document.createElement('figure');
-
-            // Crée l'image du projet
-            const img = document.createElement('img');
-            img.src = project.imageUrl; // Utilise l'URL de l'image depuis l'API
-            img.alt = project.title; // Ajoute un texte alternatif avec le titre
-
-            // Crée le titre du projet
-            const figcaption = document.createElement('figcaption');
-            figcaption.textContent = project.title; // Affiche le titre du projet
-
-            // Définir l'ID de la catégorie comme un attribut de l'élément figure
-            figure.setAttribute('data-category-id', project.categoryId); // Utilise categoryId pour filtrer
-
-            // Ajoute l'image et le titre à l'élément figure
-            figure.appendChild(img);
-            figure.appendChild(figcaption);
-
-            // Ajoute la figure à la galerie
-            galerie.appendChild(figure);
-        });
-    } catch (error) {
-        console.error('Erreur:', error); // Affiche l'erreur dans la console
-        const galerie = document.querySelector('.gallery');
-        galerie.innerHTML = '<p>Une erreur est survenue lors de la récupération des projets.</p>';
-    }
-}
-
-// Fonction pour récupérer les catégories depuis l'API
-async function getCategories() {
-    try {
-        const categoriesResponse = await fetch(apiURLCategories);
-        if (!categoriesResponse.ok) {
-            throw new Error('Erreur lors de la récupération des catégories');
-        }
-        const categories = await categoriesResponse.json();
-        return categories;
-    } catch (error) {
-        console.error('Erreur:', error); // Affiche l'erreur dans la console
-    }
-}
-
-// Fonction pour afficher les filtres
-async function displayFilters() {
-    const categories = await getCategories(); // Récupère les catégories depuis l'API
-
-    // Sélectionne l'élément categories dans le DOM
-    const categoriesContainer = document.querySelector('.categories');
-
-    // Vide le contenu statique de la liste de catégories
-    categoriesContainer.innerHTML = '';
-
-    // Parcourt les catégories récupérées et les ajoute dans le HTML
-    categories.forEach(category => {
-        // Crée un élément bouton pour chaque catégorie
-        const categoryItem = document.createElement('li');
-        const categoryButton = document.createElement('button');
-
-        categoryButton.textContent = category.name; // Affiche le titre de la catégorie
-        categoryItem.appendChild(categoryButton);
-        categoriesContainer.appendChild(categoryItem);
-
-        categoryButton.addEventListener('click', () => {
-            filterWorks(category.id); // Filtre les travaux par catégorie
-        });
-    });
-
-    // Ajouter un bouton "Tous" pour réafficher tous les travaux
-    const allWorksButton = document.createElement('button');
-    allWorksButton.textContent = 'Tous';
-    categoriesContainer.prepend(allWorksButton); // Ajouter en haut de la liste
-    allWorksButton.addEventListener('click', () => {
-        filterWorks(); // Appel de la fonction sans catégorie pour montrer tous les travaux
-    });
-}
-
-// Fonction pour filtrer les travaux
-function filterWorks(categoryId = null) {
-    // Sélectionne tous les travaux de la galerie
-    const allWorks = document.querySelectorAll('.gallery figure');
-
-    allWorks.forEach(work => {
-        const workCategoryId = parseInt(work.getAttribute('data-category-id')); // Récupère l'ID de la catégorie de chaque figure
-
-        if (categoryId === null || workCategoryId === categoryId) {
-            work.style.display = 'block'; // Affiche le travail
-        } else {
-            work.style.display = 'none'; // Cache le travail
-        }
-    });
-}
-
-
-// Fonction pour gérer l'affichage des boutons login/logout
-function updateLoginLogout(isLoggedIn) {
-    const navLogin = document.getElementById('navLogin');
-    const navLogout = document.getElementById('navLogout');
-
-    if (isLoggedIn) {
-        navLogin.style.display = 'none';  // Cacher le bouton login
-        navLogout.style.display = 'block'; // Afficher le bouton logout
-    } else {
-        navLogin.style.display = 'block';  // Afficher le bouton login
-        navLogout.style.display = 'none';   // Cacher le bouton logout
-    }
-}
-
-// Gestion de la déconnexion
-navLogout.addEventListener("click", function (event) {
-    event.preventDefault(); // Empêche le rechargement de la page
-
-    // Supprimez le token de l'utilisateur du stockage local
-    localStorage.removeItem("authToken");
-
-    // Mettez à jour les boutons login/logout
-    updateLoginLogout(false);
-
-    // Optionnel: Redirigez vers la page d'accueil ou une autre page
-    window.location.href = "login.html";
-});
-
-// Fonction pour cacher les filtres si l'utilisateur est connecté
-function hideFiltersIfLoggedIn() {
-    const categoriesContainer = document.querySelector('.categories');
-    const token = localStorage.getItem('authToken'); // Vérifie la présence du token
-
-    if (token) {
-        categoriesContainer.classList.add('hidden'); // Masque la section des catégories
-    }
-}
-
-// Sélection des éléments du DOM pour la modale
 const editModal = document.getElementById('editModal');
 const modalGallery = document.getElementById('modalGallery');
-
 const closeModalButton = document.querySelector('.close-modal');
 const addPhotoButton = document.getElementById('addPhotoBtn');
 
-// Fonction pour ouvrir la modale
+const addProjectModal = document.getElementById('addProjectModal');
+const addPhotoModal = document.getElementById('addPhotoModal');
+const closeProjectModalBtn = document.getElementById('closeProjectModalBtn');
+const addProjectForm = document.getElementById('addProjectForm');
+const categorySelect = document.getElementById('selectCategory');
+const uploadIcon = document.getElementById('upload-icon');
+const addPhotoBtn = document.querySelector('.add-photo-btn');
+const photoHint = document.querySelector('.photo-hint');
+
+
+// === GESTION DES PROJETS ===
+
+// Récupérer et afficher les projets
+async function displayWorks() {
+    try {
+        const workResponse = await fetch(apiURLWorks);
+        if (!workResponse.ok) throw new Error('Erreur lors de la récupération des projets');
+
+        const projets = await workResponse.json();
+        const galerie = document.querySelector('.gallery');
+        galerie.innerHTML = '';
+
+        projets.forEach(project => {
+            const figure = createProjectFigure(project);
+            galerie.appendChild(figure);
+        });
+    } catch (error) {
+        console.error('Erreur:', error);
+        document.querySelector('.gallery').innerHTML = '<p>Une erreur est survenue lors de la récupération des projets.</p>';
+    }
+}
+
+// Créer un élément <figure> pour un projet
+function createProjectFigure(project) {
+    const figure = document.createElement('figure');
+    figure.setAttribute('data-category-id', project.categoryId);
+
+    const img = document.createElement('img');
+    img.src = project.imageUrl;
+    img.alt = project.title;
+
+    const figcaption = document.createElement('figcaption');
+    figcaption.textContent = project.title;
+
+    figure.appendChild(img);
+    figure.appendChild(figcaption);
+    return figure;
+}
+
+// Filtrer les projets par catégorie
+function filterWorks(categoryId = null) {
+    const allWorks = document.querySelectorAll('.gallery figure');
+    allWorks.forEach(work => {
+        const workCategoryId = parseInt(work.getAttribute('data-category-id'));
+        work.style.display = categoryId === null || workCategoryId === categoryId ? 'block' : 'none';
+    });
+}
+
+// === GESTION DES CATÉGORIES ===
+
+// Récupérer les catégories
+async function getCategories() {
+    try {
+        const categoriesResponse = await fetch(apiURLCategories);
+        if (!categoriesResponse.ok) throw new Error('Erreur lors de la récupération des catégories');
+        return await categoriesResponse.json();
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+}
+
+// Afficher les filtres
+async function displayFilters() {
+    const categories = await getCategories();
+    const categoriesContainer = document.querySelector('.categories');
+    categoriesContainer.innerHTML = '';
+
+    categories.forEach(category => {
+        const button = createFilterButton(category);
+        categoriesContainer.appendChild(button);
+    });
+
+    const allWorksButton = document.createElement('button');
+    allWorksButton.textContent = 'Tous';
+    allWorksButton.addEventListener('click', () => filterWorks());
+    categoriesContainer.prepend(allWorksButton);
+}
+
+// Créer un bouton de filtre pour une catégorie
+function createFilterButton(category) {
+    const categoryButton = document.createElement('button');
+    categoryButton.textContent = category.name;
+    categoryButton.addEventListener('click', () => filterWorks(category.id));
+    return categoryButton;
+}
+
+// === GESTION DE LA MODALE D'ÉDITION ===
+
+// Ouvrir et fermer la modale
 function openEditModal() {
-    editModal.classList.remove('hidden');
-    editModal.style.display = 'block';
+    editModal.classList.remove('modal-hidden');
     loadProjectsInModal();
 }
 
-// Fonction pour fermer la modale
 function closeEditModal() {
-    editModal.style.display = 'none';
-    editModal.classList.add('hidden');
+    editModal.classList.add('modal-hidden');
 }
 
-// Ajouter les événements pour ouvrir et fermer la modal
-editButton.addEventListener('click', openEditModal);
-closeModalButton.addEventListener('click', closeEditModal);
-
-// Empêche la fermeture de la modal en cliquant à l'extérieur
-editModal.addEventListener('click', (event) => {
-    if (event.target === editModal) {
-        closeEditModal();
-    }
-});
-
-// Charger les projets dans la modal
+// Charger les projets dans la modale
 async function loadProjectsInModal() {
     try {
         const response = await fetch(apiURLWorks);
-        if (!response.ok) {
-            throw new Error('Erreur lors du chargement des projets');
-        }
-        const projects = await response.json();
+        if (!response.ok) throw new Error('Erreur lors du chargement des projets');
 
+        const projects = await response.json();
         modalGallery.innerHTML = '';
 
         projects.forEach(project => {
-            const figure = document.createElement('figure');
-            const img = document.createElement('img');
-            img.src = project.imageUrl;
-            img.alt = project.title;
-
-            const figcaption = document.createElement('figcaption');
-            figcaption.textContent = project.title;
-
-            const deleteIcon = document.createElement('i');
-            deleteIcon.className = 'fas fa-trash-alt';
-            deleteIcon.addEventListener('click', () => deleteProject(project.id));
-
-            figure.appendChild(img);
-            figure.appendChild(figcaption);
-            figure.appendChild(deleteIcon);
-
+            const figure = createModalProjectFigure(project);
             modalGallery.appendChild(figure);
         });
     } catch (error) {
@@ -225,20 +134,37 @@ async function loadProjectsInModal() {
     }
 }
 
-// Fonction pour supprimer un projet
+// Créer un <figure> pour la modale
+function createModalProjectFigure(project) {
+    const figure = document.createElement('figure');
+    
+    const img = document.createElement('img');
+    img.src = project.imageUrl;
+    img.alt = project.title;
+
+    const figcaption = document.createElement('figcaption');
+    figcaption.textContent = project.title;
+
+    const deleteIcon = document.createElement('i');
+    deleteIcon.className = 'fas fa-trash-alt';
+    deleteIcon.addEventListener('click', () => deleteProject(project.id));
+
+    figure.appendChild(img);
+    figure.appendChild(figcaption);
+    figure.appendChild(deleteIcon);
+
+    return figure;
+}
+
+// Supprimer un projet
 async function deleteProject(projectId) {
     try {
         const token = localStorage.getItem('authToken');
         const response = await fetch(`${apiURLWorks}/${projectId}`, {
             method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-
-        if (!response.ok) {
-            throw new Error('Erreur lors de la suppression du projet');
-        }
+        if (!response.ok) throw new Error('Erreur lors de la suppression du projet');
 
         alert('Projet supprimé avec succès');
         loadProjectsInModal();
@@ -249,32 +175,139 @@ async function deleteProject(projectId) {
     }
 }
 
-// Event pour "Ajouter une photo"
-addPhotoButton.addEventListener('click', () => {
-    // Logique pour ajouter une photo ou ouvrir un autre modal de téléchargement de photo
-    alert("Fonction d'ajout de photo en cours de développement");
-});
+// === GESTION DES MODALES ET FORMULAIRES ===
 
-// Appelle les fonctions quandFQ    azerè_çà QST la page est chargée
-document.addEventListener('DOMContentLoaded', async () => {
-    await displayWorks(); // Affiche les projets
-    await displayFilters(); // Affiche les filtres
-    hideFiltersIfLoggedIn(); // Vérifie l'état de connexion et masque les filtres si nécessaire
-// Vérifiez si l'utilisateur est déjà connecté
-const token = localStorage.getItem('authToken');
-console.log(token)
-updateLoginLogout(!!token); // Met à jour les boutons selon l'état de connexion
+// Ouvrir et fermer la modale d'ajout de photo
+function openAddProjectModal() {
+    addProjectModal.classList.remove('modal-hidden');
+    loadCategoriesInForm();
+}
 
-// Si un token est présent, l'utilisateur est connecté
-if (token) {
-    // Afficher le bouton "Modifier"
-    if (editButton) {
-        editButton.style.display = 'block';
-    }
-} else {
-    // Si aucun token n'est présent, cacher le bouton "Modifier"
-    if (editButton) {
-        editButton.style.display = 'none';
+function closeAddProjectModal() {
+    addProjectModal.style.display = 'none';
+    addProjectModal.classList.add('modal-hidden');
+}
+
+// Charger les catégories dans le formulaire
+async function loadCategoriesInForm() {
+    try {
+        const categories = await getCategories();
+        categorySelect.innerHTML = '';
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des catégories dans le formulaire:', error);
     }
 }
+
+
+// Gérer l'envoi du formulaire d'ajout de projet
+addProjectForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(addProjectForm);
+    const token = localStorage.getItem('authToken');
+
+    try {
+        const response = await fetch(apiURLWorks, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: formData,
+        });
+        if (!response.ok) throw new Error('Erreur lors de l\'ajout du projet');
+
+        alert('Projet ajouté avec succès');
+        closeAddProjectModal();
+        closeEditModal();
+        displayWorks();
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Impossible d\'ajouter le projet.');
+    }
 });
+
+// === GESTION DE L'AUTHENTIFICATION ===
+
+// Mettre à jour les boutons login/logout
+function updateLoginLogout(isLoggedIn) {
+    const navLogin = document.getElementById('navLogin');
+    const navLogout = document.getElementById('navLogout');
+
+    navLogin.style.display = isLoggedIn ? 'none' : 'block';
+    navLogout.style.display = isLoggedIn ? 'block' : 'none';
+}
+
+// Gestion de la déconnexion
+document.getElementById('navLogout').addEventListener('click', (event) => {
+    event.preventDefault();
+    localStorage.removeItem('authToken');
+    updateLoginLogout(false);
+    window.location.href = "login.html";
+});
+
+// Cacher les filtres si l'utilisateur est connecté
+function hideFiltersIfLoggedIn() {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        document.querySelector('.categories').classList.add('hidden');
+    }
+}
+
+// hide/play edit button
+document.addEventListener('DOMContentLoaded', async () => {
+    await displayWorks();
+    await displayFilters();
+    hideFiltersIfLoggedIn();
+
+    const token = localStorage.getItem('authToken');
+    updateLoginLogout(!!token);
+
+    if (token && editButton) {
+        editButton.style.display = 'block';
+    } else if (editButton) {
+        editButton.style.display = 'none';
+    }
+});
+
+function loadFile(event) {
+    // Vérifier si un fichier est chargé
+    if (event.target.files && event.target.files[0]) {
+        // Afficher l'image chargée
+        uploadIcon.src = URL.createObjectURL(event.target.files[0]);
+        uploadIcon.classList.add('uploaded');
+
+        // Cacher les éléments
+        addPhotoBtn.classList.add('hidden');
+        photoHint.classList.add('hidden');
+    }
+}
+
+
+// Activer le bouton lorsque les champs sont remplis
+function checkFormValidity() {
+    const titleValue = document.getElementById('title').value.trim();
+    const categoryValue = document.getElementById('selectCategory').value;
+    const imgInputValue = document.getElementById('fileInput').files.length > 0;
+
+    const isFormValid = titleValue && categoryValue && imgInputValue;
+    document.getElementById('submitBtn').disabled = !isFormValid;
+}
+
+//eventListners
+editButton.addEventListener('click', openEditModal);
+closeModalButton.addEventListener('click', closeEditModal);
+addPhotoButton.addEventListener('click', openAddProjectModal);
+closeProjectModalBtn.addEventListener('click', closeAddProjectModal);
+fileInput.addEventListener('change', loadFile);
+
+document.getElementById('title').addEventListener('input', checkFormValidity);
+document.getElementById('selectCategory').addEventListener('change', checkFormValidity);
+document.getElementById('fileInput').addEventListener('change', checkFormValidity);
+
+const button = document.getElementById('submitBtn');
+
