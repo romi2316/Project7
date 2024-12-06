@@ -231,10 +231,13 @@ function closeAddProjectModal() {
 
 // Charger les catégories dans le formulaire
 async function loadCategoriesInForm() {
+    const categorySelect = document.getElementById('selectCategory');
+    
     try {
+        // Appel à la fonction pour obtenir les catégories
         const categories = await getCategories();
-        categorySelect.innerHTML = '';
 
+        // Assurer que le contenu dynamique n'efface pas l'option par défaut
         categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;
@@ -245,7 +248,6 @@ async function loadCategoriesInForm() {
         console.error('Erreur lors du chargement des catégories dans le formulaire:', error);
     }
 }
-
 
 // Gérer l'envoi du formulaire d'ajout de projet
 addProjectForm.addEventListener('submit', async (event) => {
@@ -279,7 +281,7 @@ function loadFile(event) {
     if (event.target.files && event.target.files[0]) {
         // Afficher l'image chargée
         uploadIcon.src = URL.createObjectURL(event.target.files[0]);
-        uploadIcon.classList.add('uploaded');
+        uploadIcon.id = 'uploaded';
 
         // Cacher les éléments
         addPhotoBtn.classList.add('hidden');

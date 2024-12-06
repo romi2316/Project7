@@ -94,6 +94,9 @@ nav li {
 	padding: 0 10px;
 	font-size: 1.2em;
 }
+nav a {
+    text-decoration: none;
+}
 
 li:hover {
 	color: #B1663C;
@@ -124,6 +127,7 @@ li:hover {
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
+    margin-top: 140px;
 }
 .gallery {
 	width: 100%;
@@ -260,7 +264,6 @@ footer nav ul {
 
 .edit-button i {
     margin-right: 5px; /* Espacement entre l'icône et le texte */
-    font-size: 20px; /* Taille de l'icône */
 }
 
 #instagram-img {
@@ -311,54 +314,28 @@ footer nav ul {
 
 }
 
-.portfolio-header h2 {
-    margin: 0; /* Supprime les marges par défaut */
-    font-size: 24px; /* Ajuste la taille selon la maquette */
-    font-weight: 700; /* S'assure que la police est épaisse */
-}
-
 .edit-button {
     display: flex;
     align-items: center;
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px; /* Ajuste la taille de la police */
-    color: #333; /* Assurez-vous que la couleur correspond à la maquette */
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 28px;
+    margin-top: 137px;
+    font-family: 'Work Sans', sans-serif;
 }
 
 .edit-button i {
     margin-right: 5px; /* Ajoute de l'espace entre l'icône et le texte */
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    max-width: 600px;
-    border-radius: 8px;
-    position: relative;
-    text-align: center;
-}
-
 .modal-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-    overflow-y: auto;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    margin-top: 60px;
+    /* overflow-y: auto; */
 }
 
 .modal-gallery figure {
@@ -367,29 +344,26 @@ footer nav ul {
 }
 
 .modal-gallery img {
-    width: 100%;
-    height: auto;
+    width: 77%;
+    height: 107px;
+    margin-bottom: 27px;
 }
+
+#modalGallery figcaption {
+    display: none; /* Masque tous les <figcaption> à l'intérieur de #modalGallery */
+}
+
 
 .close-modal {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
+    right: 20px;
+    font-size: 33px;
     cursor: pointer;
+    background-color: white;
+    border: none;
+    font-weight: bold;
 }
 
-.add-photo-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-	width: 237px;
-    background-color: #007b5e;
-    color: white;
-    border: none;
-    border-radius: 60px;
-    cursor: pointer;
-	font-family: syne;
-}
 
 .add-photo-button:hover {
     background-color: #00573a;
@@ -398,22 +372,20 @@ footer nav ul {
 /* Icône de suppression */
 .modal-gallery i.fa-trash-alt {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    right: 17px;
+    top: 7px;
 	background-color: black;
     color: #f1ecec;
-	font-size: 0.8em; /* Réduit la taille de l'icône de la corbeille */
+	font-size: 0.7em; /* Réduit la taille de l'icône de la corbeille */
     padding: 3px;
     cursor: pointer;
-	display: inline-flex; /* Aligne l'icône au centre du fond noir */
-    align-items: center;
-    justify-content: center;
 }
-#editModal .modal-content h2 {
-    font-size: 26px; 
-    color: #333;
+.modal-content h2 {
+    color: #000000;
     font-family: 'Work Sans', sans-serif;
 	font-weight: 400;
+    margin-bottom: 48px;
+    margin-top: 40px;
 }
 
 /* Empêche de défiler lorsque la modale est ouverte */
@@ -429,8 +401,7 @@ body.modal-open {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Couche de fond sombre */
-    z-index: 1000; /* Assure que la modale est au-dessus de tout */
+    background-color: #0000004D;
     display: flex; /* Active le centrage */
     justify-content: center;
     align-items: center;
@@ -442,12 +413,18 @@ body.modal-open {
     background-color: #fff; /* Fond blanc pour le contenu */
     border-radius: 10px; /* Coins arrondis */
     padding: 20px; /* Espacement interne */
-    width: 90%; /* Largeur relative pour s'adapter aux petits écrans */
-    max-width: 600px; /* Largeur maximale */
+    padding-left: 100px;
+    padding-right: 100px;
+    width: 470px;
+    height: 688px;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3); /* Ombre portée */
-    position: relative; /* Nécessaire pour le bouton de fermeture */
-    animation: fadeIn 0.3s ease-in-out; /* Animation d'apparition */
+    position: relative;
     text-align: center;
+    /* overflow-y: auto; */
+}
+
+.modal-content h2 {
+    margin-top: 30px;
 }
 
 /* Animation pour l'apparition de la modale */
@@ -462,21 +439,10 @@ body.modal-open {
     }
 }
 
-/* Bouton pour fermer la modale */
-.modal-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #333; /* Couleur de l'icône de fermeture */
-}
-
 /* Bouton d'ajout ou d'action */
 .add-photo-button {
     margin-top: 20px;
+    margin-bottom: 34px;
     padding: 10px 20px;
     width: 237px;
     background-color: #007b5e; /* Couleur verte */
@@ -502,8 +468,7 @@ body.modal-open {
 
 /* Conteneur de prévisualisation */
 .photo-preview {
-    width: 420px;
-    height: 170px;
+    width: 470px;
     background-color: #E8F1F6;
     gap: 10px;
     border: 2px #2e7d67;
@@ -512,16 +477,17 @@ body.modal-open {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     overflow: hidden;
   }
 
   #upload-icon {
     width: 20%;
     max-height: 100%;
+    margin-top: 23px;
   }
 
-  .uploaded {
+  #uploaded {
     max-width: 30%;
     height: 193px;
 }
@@ -541,7 +507,7 @@ body.modal-open {
     border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
-    width: 40%;
+    width: 30%;
   }
   
   .add-photo-btn:hover {
@@ -554,40 +520,28 @@ body.modal-open {
     font-size: 10px;
     margin-top: 5px;
     text-align: center;
-  }
-  
-  /* Champ texte et sélection */
-  input[type="text"], select {
-    width: 60%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    margin-bottom: 23px;
   }
   
   /* Bouton de validation */
-  .submit-button {
+    .submit-button {
     background-color: #2e7d67;
     color: white;
-    padding: 10px 20px;
     border: none;
     border-radius: 20px;
     font-size: 16px;
     cursor: pointer;
-    height: 34px;
-    width: 40%;
+    height: 36px;
+    width: 50.5%;
   }
-  
-  .submit-button:hover {
-    background-color: #246153;
-  }
-  
+
   button:disabled {
-    background-color: #ccc; /* Gris clair */
-    color: #666;           /* Texte grisé */
-    border: 1px solid #999; /* Bordure grisée */
+    background-color: #A7A7A7; 
     cursor: not-allowed;   /* Curseur interdit */
-    opacity: 0.6;          /* Optionnel : rendre le bouton plus transparent */
+}
+
+button:disabled:hover{
+    background-color: #A7A7A7;
 }
 .form-group{
     margin-bottom: 20px;
@@ -596,10 +550,45 @@ body.modal-open {
     align-items: center;
 }
 
-label[for="title"],
-label[for="category"] {
-    align-self: flex-start;
-    margin-bottom: 5px; 
-    text-align: left; 
-    padding-left: 120px; 
+.custom-line {
+    width: 470px;
+    height: 2px; /* Épaisseur de la ligne */
+    background-color: #bfb8b866; /* Couleur du trait */
+    margin: 20px 0; /* Espacement au-dessus et au-dessous */
+    margin-top: 47px;
+    margin-bottom: 32px;
+}
+
+#project-input .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-top: 17px;
+  }
+
+  #project-input label {
+    font-size: 16px; 
+    color: #000; 
+    margin-bottom: 10px; 
+}
+
+  
+  /* Alignement horizontal entre label et input */
+  #project-input input,
+  #project-input select {
+    padding: 10px;
+    border: 1px  #ccc;
+    width: 100%;
+    height: 51px;
+    box-sizing: border-box;
+    margin: 7px 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }
+
+  label[for="title"] {
+    padding-right: 430px;
+}
+
+label[for="selectCategory"] {
+    padding-right: 390px;
 }
