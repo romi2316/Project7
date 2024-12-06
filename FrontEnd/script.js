@@ -16,6 +16,48 @@ const uploadIcon = document.getElementById('upload-icon');
 const addPhotoBtn = document.querySelector('.add-photo-btn');
 const photoHint = document.querySelector('.photo-hint');
 
+// === GESTION DE L'AUTHENTIFICATION ===
+
+// Mettre à jour les boutons login/logout
+function updateLoginLogout(isLoggedIn) {
+    const navLogin = document.getElementById('navLogin');
+    const navLogout = document.getElementById('navLogout');
+
+    navLogin.style.display = isLoggedIn ? 'none' : 'block';
+    navLogout.style.display = isLoggedIn ? 'block' : 'none';
+}
+
+// Gestion de la déconnexion
+document.getElementById('navLogout').addEventListener('click', (event) => {
+    event.preventDefault();
+    localStorage.removeItem('authToken');
+    updateLoginLogout(false);
+    window.location.href = "login.html";
+});
+
+// Cacher les filtres si l'utilisateur est connecté
+function hideFiltersIfLoggedIn() {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+        document.querySelector('.categories').classList.add('hidden');
+    }
+}
+
+// hide/play edit button
+document.addEventListener('DOMContentLoaded', async () => {
+    await displayWorks();
+    await displayFilters();
+    hideFiltersIfLoggedIn();
+
+    const token = localStorage.getItem('authToken');
+    updateLoginLogout(!!token);
+
+    if (token && editButton) {
+        editButton.style.display = 'block';
+    } else if (editButton) {
+        editButton.style.display = 'none';
+    }
+});
 
 // === GESTION DES PROJETS ===
 
@@ -184,7 +226,6 @@ function openAddProjectModal() {
 }
 
 function closeAddProjectModal() {
-    addProjectModal.style.display = 'none';
     addProjectModal.classList.add('modal-hidden');
 }
 
@@ -231,48 +272,7 @@ addProjectForm.addEventListener('submit', async (event) => {
     }
 });
 
-// === GESTION DE L'AUTHENTIFICATION ===
 
-// Mettre à jour les boutons login/logout
-function updateLoginLogout(isLoggedIn) {
-    const navLogin = document.getElementById('navLogin');
-    const navLogout = document.getElementById('navLogout');
-
-    navLogin.style.display = isLoggedIn ? 'none' : 'block';
-    navLogout.style.display = isLoggedIn ? 'block' : 'none';
-}
-
-// Gestion de la déconnexion
-document.getElementById('navLogout').addEventListener('click', (event) => {
-    event.preventDefault();
-    localStorage.removeItem('authToken');
-    updateLoginLogout(false);
-    window.location.href = "login.html";
-});
-
-// Cacher les filtres si l'utilisateur est connecté
-function hideFiltersIfLoggedIn() {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-        document.querySelector('.categories').classList.add('hidden');
-    }
-}
-
-// hide/play edit button
-document.addEventListener('DOMContentLoaded', async () => {
-    await displayWorks();
-    await displayFilters();
-    hideFiltersIfLoggedIn();
-
-    const token = localStorage.getItem('authToken');
-    updateLoginLogout(!!token);
-
-    if (token && editButton) {
-        editButton.style.display = 'block';
-    } else if (editButton) {
-        editButton.style.display = 'none';
-    }
-});
 
 function loadFile(event) {
     // Vérifier si un fichier est chargé
