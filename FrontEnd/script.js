@@ -232,12 +232,15 @@ function closeAddProjectModal() {
 // Charger les catégories dans le formulaire
 async function loadCategoriesInForm() {
     const categorySelect = document.getElementById('selectCategory');
-    
+
     try {
-        // Appel à la fonction pour obtenir les catégories
+        // Réinitialiser les options pour éviter les duplications
+        categorySelect.innerHTML = '<option value="" selected disabled hidden></option>';
+
+        // Récupérer les catégories depuis l'API
         const categories = await getCategories();
 
-        // Assurer que le contenu dynamique n'efface pas l'option par défaut
+        // Ajouter chaque catégorie comme option dans le select
         categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;
@@ -248,6 +251,9 @@ async function loadCategoriesInForm() {
         console.error('Erreur lors du chargement des catégories dans le formulaire:', error);
     }
 }
+
+
+
 
 // Gérer l'envoi du formulaire d'ajout de projet
 addProjectForm.addEventListener('submit', async (event) => {
