@@ -1,12 +1,10 @@
 const apiURLWorks = 'http://localhost:5678/api/works';
 const apiURLCategories = 'http://localhost:5678/api/categories';
-let editButton = document.getElementById('editProjectsBtn');
-
+const editButton = document.getElementById('editProjectsBtn');
 const editModal = document.getElementById('editModal');
 const modalGallery = document.getElementById('modalGallery');
 const closeModalButton = document.querySelector('.close-modal');
 const addPhotoButton = document.getElementById('addPhotoBtn');
-
 const addProjectModal = document.getElementById('addProjectModal');
 const addPhotoModal = document.getElementById('addPhotoModal');
 const closeProjectModalBtn = document.getElementById('closeProjectModalBtn');
@@ -15,6 +13,10 @@ const categorySelect = document.getElementById('selectCategory');
 const uploadIcon = document.getElementById('upload-icon');
 const addPhotoBtn = document.querySelector('.add-photo-btn');
 const photoHint = document.querySelector('.photo-hint');
+const title = document.getElementById('title');
+const fileInput = document.getElementById('fileInput');
+const button = document.getElementById('submitBtn');
+
 
 // === GESTION DE L'AUTHENTIFICATION ===
 
@@ -179,7 +181,7 @@ async function loadProjectsInModal() {
 // Créer un <figure> pour la modale
 function createModalProjectFigure(project) {
     const figure = document.createElement('figure');
-    
+
     const img = document.createElement('img');
     img.src = project.imageUrl;
     img.alt = project.title;
@@ -253,8 +255,6 @@ async function loadCategoriesInForm() {
 }
 
 
-
-
 // Gérer l'envoi du formulaire d'ajout de projet
 addProjectForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -271,8 +271,17 @@ addProjectForm.addEventListener('submit', async (event) => {
         if (!response.ok) throw new Error('Erreur lors de l\'ajout du projet');
 
         alert('Projet ajouté avec succès');
+        // Réinitialiser le formulaire après validation
+        addProjectForm.reset();        
+        // Réinitialiser l'affichage des éléments liés au fichier
+        uploadIcon.src = "/assets/images/Placeholder_view_vector.png"; // Réinitialise l'image d'aperçu
+        uploadIcon.id = 'upload-icon'; // Retourne à l'ID initial
+        addPhotoBtn.classList.remove('hidden'); // Réaffiche le bouton "Ajouter photo"
+        photoHint.classList.remove('hidden');  // Réaffiche le texte d'aide
+        // Fermer les modales
         closeAddProjectModal();
         closeEditModal();
+        // Recharger les projets affichés
         displayWorks();
     } catch (error) {
         console.error('Erreur:', error);
@@ -313,9 +322,8 @@ addPhotoButton.addEventListener('click', openAddProjectModal);
 closeProjectModalBtn.addEventListener('click', closeAddProjectModal);
 fileInput.addEventListener('change', loadFile);
 
-document.getElementById('title').addEventListener('input', checkFormValidity);
-document.getElementById('selectCategory').addEventListener('change', checkFormValidity);
-document.getElementById('fileInput').addEventListener('change', checkFormValidity);
+title.addEventListener('input', checkFormValidity);
+categorySelect.addEventListener('change', checkFormValidity);
+fileInput.addEventListener('change', checkFormValidity);
 
-const button = document.getElementById('submitBtn');
 
