@@ -289,8 +289,7 @@ addProjectForm.addEventListener('submit', async (event) => {
     }
 });
 
-
-
+//charger l'image
 function loadFile(event) {
     // Vérifier si un fichier est chargé
     if (event.target.files && event.target.files[0]) {
@@ -304,7 +303,6 @@ function loadFile(event) {
     }
 }
 
-
 // Activer le bouton lorsque les champs sont remplis
 function checkFormValidity() {
     const titleValue = document.getElementById('title').value.trim();
@@ -314,6 +312,20 @@ function checkFormValidity() {
     const isFormValid = titleValue && categoryValue && imgInputValue;
     document.getElementById('submitBtn').disabled = !isFormValid;
 }
+
+// Fermer la modale lorsqu'on clique en dehors de son contenu
+editModal.addEventListener('click', (event) => {
+    if (event.target === editModal) {
+        closeEditModal();
+    }
+});
+
+addProjectModal.addEventListener('click', (event) => {
+    if (event.target === addProjectModal) {
+        closeAddProjectModal();
+    }
+});
+
 
 //eventListners
 editButton.addEventListener('click', openEditModal);

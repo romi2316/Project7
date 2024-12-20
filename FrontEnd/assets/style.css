@@ -3,87 +3,8 @@
    License: none (public domain)
 */
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio,video 
+{
     margin: 0;
     padding: 0;
     border: 0;
@@ -138,7 +59,7 @@ table {
 body {
     max-width: 1140px;
     margin: auto;
-    font-family: 'Work Sans';
+    font-family: 'Work Sans', sans-serif;
     font-size: 14px;
 }
 
@@ -179,7 +100,7 @@ nav ul {
     display: flex;
     align-items: center;
     list-style-type: none;
-
+    font-size: 16px;
 }
 
 nav li {
@@ -188,10 +109,14 @@ nav li {
 }
 
 nav a {
+    font-family: 'Work Sans';
     text-decoration: none;
     color: black;
+    font-size: 19px;
 }
-
+nav a:hover {
+    font-weight: bold;
+}
 li:hover {
     color: #B1663C;
 }
@@ -305,7 +230,6 @@ footer nav ul {
     padding: 20px;
     border-radius: 8px;
     background-color: white;
-    font-weight: bold;
 }
 
 .login-section h2 {
@@ -343,31 +267,41 @@ footer nav ul {
 }
 
 #loginInput label[for="email"] {
-    padding-right: 340px;
+    padding-right: 330px;
 }
 
 #loginInput label[for="password"] {
-    padding-right: 300px;
+    padding-right: 270px;
 }
+
+label[for="email"], label[for="password"] {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: bold;
+    color: #3D3D3D;
+}
+
 .edit-button {
-    background: none;
     border: none;
     cursor: pointer;
     padding: 5px 10px;
     margin-left: 10px;
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
-    display: inline-flex;
-    align-items: center;
+    background: none;
+    font-weight: 400;
+    margin-bottom: 28px;
+    margin-top: 140px;
+    font-family: 'Work Sans';
 }
 
 .edit-button i {
     margin-right: 5px;
-    /* Espacement entre l'icône et le texte */
 }
 
 #instagram-img {
-    height: 19.5px;
+    height: 19px;
+    margin-top: 5px;
 }
 
 .categories {
@@ -427,23 +361,6 @@ footer nav ul {
 
 }
 
-.edit-button {
-    display: flex;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: 400;
-    color: #333;
-    margin-bottom: 28px;
-    margin-top: 137px;
-    font-family: 'Work Sans', sans-serif;
-}
-
-.edit-button i {
-    margin-right: 5px;
-    /* Ajoute de l'espace entre l'icône et le texte */
-}
 
 .modal-gallery {
     display: grid;
@@ -458,14 +375,13 @@ footer nav ul {
 }
 
 .modal-gallery img {
-    width: 77%;
+    width: 85%;
     height: 107px;
     margin-bottom: 27px;
 }
 
 #modalGallery figcaption {
     display: none;
-    /* Masque tous les <figcaption> à l'intérieur de #modalGallery */
 }
 
 
@@ -487,14 +403,15 @@ footer nav ul {
 /* Icône de suppression */
 .modal-gallery i.fa-trash-alt {
     position: absolute;
-    right: 17px;
+    right: 12px;
     top: 7px;
     background-color: black;
     color: #f1ecec;
     font-size: 0.7em;
     /* Réduit la taille de l'icône de la corbeille */
-    padding: 3px;
+    padding: 4px;
     cursor: pointer;
+    border-radius: 3px;
 }
 
 .modal-content h2 {
@@ -513,43 +430,35 @@ body.modal-open {
 
 /* Styles pour la modale */
 .modal {
-    display: none;
-    /* Masquée par défaut */
     position: fixed;
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
     width: 100%;
-    height: 100%;
     background-color: #0000004D;
     display: flex;
-    /* Active le centrage */
     justify-content: center;
     align-items: center;
-    overflow-y: auto;
-    /* Ajoute un défilement si le contenu dépasse */
 }
 
 /* Contenu de la modale */
 .modal-content {
     background-color: #fff;
-    /* Fond blanc pour le contenu */
     border-radius: 10px;
-    /* Coins arrondis */
     padding: 20px;
-    /* Espacement interne */
     padding-left: 100px;
     padding-right: 100px;
-    width: 470px;
-    height: 688px;
+    height: 90%;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.3);
-    /* Ombre portée */
     position: relative;
-    text-align: center;
-    /* overflow-y: auto; */
+    text-align: center;    
+    overflow-y: auto;
 }
 
 .modal-content h2 {
-    margin-top: 30px;
+    margin-top: 26px;
+    font-size: 26px;
 }
 
 /* Animation pour l'apparition de la modale */
@@ -567,7 +476,6 @@ body.modal-open {
 
 /* Bouton d'ajout ou d'action */
 .add-photo-button {
-    margin-top: 20px;
     margin-bottom: 34px;
     padding: 10px 20px;
     width: 237px;
@@ -577,7 +485,6 @@ body.modal-open {
     /* Texte en blanc */
     border: none;
     border-radius: 60px;
-    /* Boutons arrondis */
     cursor: pointer;
     font-family: 'Syne', sans-serif;
     font-size: 16px;
@@ -687,13 +594,10 @@ button:disabled:hover {
 .custom-line {
     width: 470px;
     height: 2px;
-    /* Épaisseur de la ligne */
     background-color: #bfb8b866;
-    /* Couleur du trait */
     margin: 20px 0;
-    /* Espacement au-dessus et au-dessous */
     margin-top: 47px;
-    margin-bottom: 32px;
+    margin-bottom: 38px;
 }
 
 #inputs .form-group {
@@ -704,9 +608,10 @@ button:disabled:hover {
 }
 
 #inputs label {
-    font-size: 16px;
+    font-size: 14px;
     color: #000;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
 
