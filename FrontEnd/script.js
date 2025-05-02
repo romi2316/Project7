@@ -16,21 +16,19 @@ const photoHint = document.querySelector('.photo-hint');
 const title = document.getElementById('title');
 const fileInput = document.getElementById('fileInput');
 const button = document.getElementById('submitBtn');
-
+const navLogin = document.getElementById('navLogin');
+const navLogout = document.getElementById('navLogout');
 
 // === GESTION DE L'AUTHENTIFICATION ===
 
 // Mettre à jour les boutons login/logout
 function updateLoginLogout(isLoggedIn) {
-    const navLogin = document.getElementById('navLogin');
-    const navLogout = document.getElementById('navLogout');
-
     navLogin.style.display = isLoggedIn ? 'none' : 'block';
     navLogout.style.display = isLoggedIn ? 'block' : 'none';
 }
 
 // Gestion de la déconnexion
-document.getElementById('navLogout').addEventListener('click', (event) => {
+    navLogout.addEventListener('click', (event) => {
     event.preventDefault();
     localStorage.removeItem('authToken');
     updateLoginLogout(false);
@@ -83,6 +81,17 @@ async function displayWorks() {
     }
 }
 
+// Récupérer les catégories
+async function getCategories() {
+    try {
+        const categoriesResponse = await fetch(apiURLCategories);
+        if (!categoriesResponse.ok) throw new Error('Erreur lors de la récupération des catégories');
+        return await categoriesResponse.json();
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+}
+
 // Créer un élément <figure> pour un projet
 function createProjectFigure(project) {
     const figure = document.createElement('figure');
@@ -100,6 +109,8 @@ function createProjectFigure(project) {
     return figure;
 }
 
+// === GESTION DES CATÉGORIES ===
+
 // Filtrer les projets par catégorie
 function filterWorks(categoryId = null) {
     const allWorks = document.querySelectorAll('.gallery figure');
@@ -107,19 +118,6 @@ function filterWorks(categoryId = null) {
         const workCategoryId = parseInt(work.getAttribute('data-category-id'));
         work.style.display = categoryId === null || workCategoryId === categoryId ? 'block' : 'none';
     });
-}
-
-// === GESTION DES CATÉGORIES ===
-
-// Récupérer les catégories
-async function getCategories() {
-    try {
-        const categoriesResponse = await fetch(apiURLCategories);
-        if (!categoriesResponse.ok) throw new Error('Erreur lors de la récupération des catégories');
-        return await categoriesResponse.json();
-    } catch (error) {
-        console.error('Erreur:', error);
-    }
 }
 
 // Afficher les filtres
@@ -139,7 +137,7 @@ async function displayFilters() {
     categoriesContainer.prepend(allWorksButton);
 }
 
-// Créer un bouton de filtre pour une catégorie
+// Créer un bouton de filtre pour chaque catégorie
 function createFilterButton(category) {
     const categoryButton = document.createElement('button');
     categoryButton.textContent = category.name;
@@ -178,7 +176,7 @@ async function loadProjectsInModal() {
     }
 }
 
-// Créer un <figure> pour la modale
+// Créer un <figure> pour le projet dans la modale
 function createModalProjectFigure(project) {
     const figure = document.createElement('figure');
 
@@ -220,7 +218,6 @@ async function deleteProject(projectId) {
 }
 
 // === GESTION DES MODALES ET FORMULAIRES ===
-
 // Ouvrir et fermer la modale d'ajout de photo
 function openAddProjectModal() {
     addProjectModal.classList.remove('modal-hidden');
@@ -253,7 +250,6 @@ async function loadCategoriesInForm() {
         console.error('Erreur lors du chargement des catégories dans le formulaire:', error);
     }
 }
-
 
 // Gérer l'envoi du formulaire d'ajout de projet
 addProjectForm.addEventListener('submit', async (event) => {
@@ -326,16 +322,12 @@ addProjectModal.addEventListener('click', (event) => {
     }
 });
 
-
 //eventListners
 editButton.addEventListener('click', openEditModal);
 closeModalButton.addEventListener('click', closeEditModal);
 addPhotoButton.addEventListener('click', openAddProjectModal);
 closeProjectModalBtn.addEventListener('click', closeAddProjectModal);
 fileInput.addEventListener('change', loadFile);
-
 title.addEventListener('input', checkFormValidity);
 categorySelect.addEventListener('change', checkFormValidity);
 fileInput.addEventListener('change', checkFormValidity);
-
-
