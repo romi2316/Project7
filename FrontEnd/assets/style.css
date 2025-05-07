@@ -367,6 +367,7 @@ label[for="email"], label[for="password"] {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     margin-top: 60px;
     /* overflow-y: auto; */
+    gap: 10px;
 }
 
 .modal-gallery figure {
@@ -375,9 +376,10 @@ label[for="email"], label[for="password"] {
 }
 
 .modal-gallery img {
-    width: 85%;
+    width: 100%;
     height: 107px;
     margin-bottom: 27px;
+    object-fit: contain;
 }
 
 #modalGallery figcaption {
@@ -528,8 +530,10 @@ body.modal-open {
 }
 
 #uploaded {
-    max-width: 30%;
+    max-width: 100%;
     height: 193px;
+    width: 100%;
+    object-fit: contain;
 }
 
 .photo-hint.hidden,
