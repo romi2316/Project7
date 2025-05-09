@@ -1,42 +1,36 @@
-const API_URL= 'http://localhost:5678/api'
-document.getElementById("loginForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Empêche le rechargement de la page
+const API_URL= 'http://localhost:5678/api' //url de base de l'API
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+document.getElementById("loginForm").addEventListener("submit", function (event) { // *écouteur d'événement pour le formulaire de connexion
+    event.preventDefault(); // Empêche le rechargement de la page
+    const email = document.getElementById("email").value; // *Récupère la valeur de l'email de l'input
+    const password = document.getElementById("password").value; // *Récupère la valeur du mot de passe de l'input
     const errorMessage = document.getElementById("errorMessage");
 
-    // Nettoie les messages d'erreur précédents
-    errorMessage.textContent = "";
+    errorMessage.textContent = "";    //Nettoie les messages d'erreur précédents
 
     // Envoi des informations de connexion
-    fetch(`${API_URL}/users/login`, {
+    fetch(`${API_URL}/users/login`, { // *Envoie une requête POST à l'API pour la connexion
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }) // *Convertit les données en JSON
     })
-        .then(response => {
-            // Vérifiez le statut de la réponse
+        .then(response => {   // Vérifiez le statut de la réponse
             if (response.ok) {
-                // La requête est réussie, donc on retourne la réponse JSON
-                return response.json();
+                return response.json(); // Si le statut est `200 OK`, on convertit la réponse en JSON
             } else {
                 // Si le statut n'est pas `200 OK`, on déclenche une erreur
                 throw new Error("E-mail ou mot de passe incorrect.");
             }
         })
         .then(data => {
-            // Vérifiez que le token et l'userId existent dans la réponse
+            // * Vérifiez que le token et l'userId existent dans la réponse
             if (data.token && data.userId) {
-                // Stocke le token pour les actions futures
-                localStorage.setItem("authToken", data.token);
-
+                localStorage.setItem("authToken", data.token); // *Stocker le token dans localstorage pour les actions futures
                 window.location='/'
             } else {
-                // Si le token ou userId n'est pas présent, affiche un message d'erreur
-                errorMessage.textContent = "Erreur dans l’identifiant ou le mot de passe.";
+                errorMessage.textContent = "Erreur dans l’identifiant ou le mot de passe."; // Affiche un message d'erreur si le token ou l'userId n'existe pas
             }
         })
         .catch(error => {

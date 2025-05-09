@@ -14,6 +14,7 @@ const addPhotoButton = document.getElementById('addPhotoBtn');
 const addProjectModal = document.getElementById('addProjectModal');
 const addPhotoModal = document.getElementById('addPhotoModal');
 const closeProjectModalBtn = document.getElementById('closeProjectModalBtn');
+const backToEditModalBtn = document.getElementById('backToEditModalBtn');
 const addPhotoBtn = document.querySelector('.add-photo-btn');
 const title = document.getElementById('title');
 const fileInput = document.getElementById('fileInput');
@@ -22,6 +23,8 @@ const photoHint = document.querySelector('.photo-hint');
 const addProjectForm = document.getElementById('addProjectForm');
 const uploadIcon = document.getElementById('upload-icon');
 const categorySelect = document.getElementById('selectCategory');
+const adminBanner = document.getElementById('adminBanner');
+
 
 let token = localStorage.getItem('authToken');
 
@@ -115,25 +118,37 @@ function filterWorks(categoryId = null) { //prend en paramètre l'ID de la caté
 }
 
 // ===================== AUTHENTIFICATION  =====================
-//updatelogin/logout/cacher les filtres/deconnexion//
-
+//updatelogin/logoutbtns
 function updateLoginLogoutBtns(isLoggedIn) {
     navLogin.style.display = isLoggedIn ? 'none' : 'block'; //true/false
     navLogout.style.display = isLoggedIn ? 'block' : 'none'; //true/false
 }
 
-navLogout.addEventListener('click', (event) => {
-    event.preventDefault();
-    localStorage.removeItem('authToken');
-    updateLoginLogoutBtns(false); //Afficher le bouton login
-    window.location.href = "login.html";
-});
-
+//cacher les filtres si connecté
 function hideFiltersIfLoggedIn() {
     if (token) {
         document.querySelector('.categories').classList.add('hidden');
     }   
 }
+
+// Vérifie la connexion au chargement
+if (token) {
+    updateLoginLogoutBtns(true);
+    hideFiltersIfLoggedIn();
+    adminBanner?.classList.remove('modal-hidden'); // Afficher le bandeau noir
+} else {
+    updateLoginLogoutBtns(false);
+    adminBanner?.classList.add('modal-hidden');    // cacher le bandeau noir
+}
+//deconnexion
+navLogout.addEventListener('click', (event) => {
+    event.preventDefault();
+    localStorage.removeItem('authToken');
+    updateLoginLogoutBtns(false); //Afficher le bouton login
+    adminBanner.classList.add('modal-hidden');
+    window.location.href = "login.html";
+});
+
 
 // ===================== MODALE Modifier =====================
 
@@ -202,6 +217,9 @@ async function deleteProject(projectId) {
         console.error('Erreur:', error);
         alert('Impossible de supprimer le projet.');
     }
+
+    displayWorks(); // Recharge la galerie principale
+
 }
 
 // ===================== MODALE D'AJOUT DE PROJET =====================
@@ -218,6 +236,10 @@ function closeAddProjectModal() {
     addProjectModal.classList.add('modal-hidden');
 }
 
+backToEditModalBtn.addEventListener('click', () => {
+        closeAddProjectModal();
+});
+
 async function loadCategoriesInForm() {
     categorySelect.innerHTML = '<option value="" selected disabled hidden></option>'; //option par défaut 
     try {
@@ -231,6 +253,31 @@ async function loadCategoriesInForm() {
     } catch (error) {
         console.error('Erreur lors du chargement des catégories dans le formulaire:', error);
     }
+}
+
+
+fileInput.addEventListener('change', loadedFile); //change : événement qui se produit lorsque l'utilisateur sélectionne un fichier
+function loadedFile(event) {
+    if (event.target.files && event.target.files[0]) { //vérifie si un fichier a été sélectionné
+        uploadIcon.src = URL.createObjectURL(event.target.files[0]); //crée une URL temporaire pour l'image sélectionnée, sans la télécharger sur le serveur
+        uploadIcon.id = 'uploaded'; //changer l'ID de l'icône pour le style CSS
+        addPhotoBtn.classList.add('hidden'); //cacher le bouton d'ajout de photo
+        photoHint.classList.add('hidden'); //cacher le bouton d'ajout de photo
+    }
+}
+
+// ========= EventListners ========//
+title.addEventListener('input', checkFormValidity); //input:saisir du texte dans le champ de saisie
+categorySelect.addEventListener('change', checkFormValidity); //change:se produit lorsque l'utilisateur sélectionne une option dans le menu déroulant
+fileInput.addEventListener('change', checkFormValidity); //change:se produit lorsque l'utilisateur sélectionne un fichier
+// ===============================//
+
+// désactiver le bouton Valider si le formulaire n'est pas valide
+function checkFormValidity() {
+    const titleValue = title.value.trim();
+    const categoryValue = categorySelect.value;
+    const imgInputValue = fileInput.files.length > 0;
+    button.disabled = !(titleValue && categoryValue && imgInputValue);
 }
 
 addProjectForm.addEventListener('submit', async (event) => {
@@ -263,34 +310,11 @@ addProjectForm.addEventListener('submit', async (event) => {
     }
 });
 
-fileInput.addEventListener('change', loadedFile); //change : événement qui se produit lorsque l'utilisateur sélectionne un fichier
-function loadedFile(event) {
-    if (event.target.files && event.target.files[0]) { //vérifie si un fichier a été sélectionné
-        uploadIcon.src = URL.createObjectURL(event.target.files[0]); //crée une URL temporaire pour l'image sélectionnée, sans la télécharger sur le serveur
-        uploadIcon.id = 'uploaded'; //changer l'ID de l'icône pour le style CSS
-        addPhotoBtn.classList.add('hidden'); //cacher le bouton d'ajout de photo
-        photoHint.classList.add('hidden'); //cacher le bouton d'ajout de photo
-    }
-}
-
-// ========= EventListners ========//
-title.addEventListener('input', checkFormValidity); //input:saisir du texte dans le champ de saisie
-categorySelect.addEventListener('change', checkFormValidity); //change:se produit lorsque l'utilisateur sélectionne une option dans le menu déroulant
-fileInput.addEventListener('change', checkFormValidity); //change:se produit lorsque l'utilisateur sélectionne un fichier
-// ===============================//
-
-// désactiver le bouton Valider si le formulaire n'est pas valide
-function checkFormValidity() {
-    const titleValue = title.value.trim();
-    const categoryValue = categorySelect.value;
-    const imgInputValue = fileInput.files.length > 0;
-    button.disabled = !(titleValue && categoryValue && imgInputValue);
-}
-
 //Close modals when clicking outside of it
 editModal.addEventListener('click', (event) => {
     if (event.target === editModal) closeEditModal(); //vérifie si l'utilisateur a cliqué à l'extérieur du contenu de la modale.
 });
+
 addProjectModal.addEventListener('click', (event) => {
     if (event.target === addProjectModal) closeAddProjectModal(); //vérifie si l'utilisateur a cliqué à l'extérieur du contenu de la modale.
 });
